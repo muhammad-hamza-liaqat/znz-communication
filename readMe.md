@@ -5,5 +5,5 @@ cors -> as a middleware for express application
 bodyParser -> as a middleware for express application
 json web token -> jwt token for authentication and authorization
 nodeMailer -> email sending services
-
+bcrypt -> hasing for the password
 ### end points
