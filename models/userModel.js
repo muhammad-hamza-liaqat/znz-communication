@@ -118,7 +118,7 @@ const userModel = sequelize.define(
 sequelize
   .sync()
   .then(() => {
-    console.log("userModel synchronized with the database(taskDB).");
+    console.log("userModel synchronized with the database(znz).");
   })
   .catch((error) => {
     console.error("Error synchronizing userModel", error);

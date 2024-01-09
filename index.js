@@ -10,11 +10,16 @@ const PORT = process.env.PORT;
 // database connection called here
 require("./database/connection");
 
+// routes import
+const authR = require("./routes/auth");
+
 //  middlewares
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/user", authR);
+
 
 // server
 
