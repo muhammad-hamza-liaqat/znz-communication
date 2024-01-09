@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel");
-
+const bcrypt = require("bcrypt");
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password, phoneNumber } = req.body;
   if (!firstName || !lastName || !email || !password || !phoneNumber) {
@@ -8,7 +8,10 @@ const registerUser = async (req, res) => {
       .json({ statusCode: 400, message: "all fields are required" });
   }
   try {
-    const newUser = await userModel.create({ ...req.body });
+    // hashing the password through bcrypt npm module.
+    const hashedPassword = await bcrypt.hash(password,10);
+
+    const newUser = await userModel.create({ ...req.body, password: hashedPassword });
     console.log(newUser);
     return res
       .status(201)
