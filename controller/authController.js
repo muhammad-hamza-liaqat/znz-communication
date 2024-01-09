@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
     console.log("internal server error- registerUser", error);
     return res
       .status(500)
-      .json({ statusCode: 500, message: "Internal Server Error" });
+      .json({ statusCode: 500, message: "Internal Server Error", error: error });
   }
 };
 
