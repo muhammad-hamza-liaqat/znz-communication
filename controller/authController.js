@@ -10,7 +10,7 @@ const registerUser = async (req, res) => {
   try {
     // hashing the password through bcrypt npm module.
     const hashedPassword = await bcrypt.hash(password,10);
-
+    // storing the hash password
     const newUser = await userModel.create({ ...req.body, password: hashedPassword });
     console.log(newUser);
     return res
