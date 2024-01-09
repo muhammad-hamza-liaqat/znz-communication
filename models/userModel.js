@@ -41,7 +41,7 @@ const userModel = sequelize.define(
           args: [3, 255],
           msg: "The lastName should be between 3 and 255 characters.",
         },
-        validationForFirstName: function (value) {
+        validationForLastName: function (value) {
           if (/[{};"'~!@#$%^&*()_+=123456789/*\-+]/.test(value)) {
             throw new Error(
               "special characters or numeric values are not allowed-lastName"
@@ -92,10 +92,26 @@ const userModel = sequelize.define(
         },
       },
     },
+    phoneNumber: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "PhoneNumber can not be null",
+        },
+        len: {
+          args: [11, 11],
+          msg: "phoneNumber should be of 11 character of Numbers",
+        },
+        isNumeric: {
+          msg: "phoneNumber should only contains numeric characters",
+        },
+      },
+    },
   },
   {
     tableName: "users",
-    timestamp: true,
+    timestamps: true,
   }
 );
 
