@@ -1,6 +1,7 @@
 // database connection
 const { Sequelize, DataTypes } = require("sequelize");
 
+// database name znz, username root , password null (empty), host localhost
 const sequelize = new Sequelize("znz", "root", "", {
   host: "localhost",
   dialect: "mysql",
