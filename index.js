@@ -18,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/user", authR);
+app.use("/api/auth/user", authR);
 
 
 // server
