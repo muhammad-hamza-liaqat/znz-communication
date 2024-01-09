@@ -1,8 +1,9 @@
 // database connection
+const DB = process.env.databaseName
 const { Sequelize, DataTypes } = require("sequelize");
 
 // database name znz, username root , password null (empty), host localhost
-const sequelize = new Sequelize("znz", "root", "", {
+const sequelize = new Sequelize(DB, "root", "", {
   host: "localhost",
   dialect: "mysql",
 });

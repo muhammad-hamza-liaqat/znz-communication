@@ -6,6 +6,10 @@ const bodyParser = require("body-parser");
 // env file
 require("dotenv").config();
 const PORT = process.env.PORT;
+
+// database connection called here
+require("./database/connection");
+
 //  middlewares
 app.use(cors());
 app.use(bodyParser.json());
