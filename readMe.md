@@ -7,4 +7,4 @@ json web token -> jwt token for authentication and authorization
 nodeMailer -> email sending services
 bcrypt -> hasing for the password
 ### end points
-http://localhost:3000/api/user/register-user
+http://localhost:3000/api/auth/user/register-user
