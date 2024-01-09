@@ -1,5 +1,7 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+
+
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password, phoneNumber } = req.body;
   if (!firstName || !lastName || !email || !password || !phoneNumber) {
@@ -28,4 +30,8 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser };
+const loginUser = async (req,res) =>{
+  res.end("hello from login user")
+}
+
+module.exports = { registerUser, loginUser };
