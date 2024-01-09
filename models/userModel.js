@@ -95,6 +95,7 @@ const userModel = sequelize.define(
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         notNull: {
           msg: "PhoneNumber can not be null",
