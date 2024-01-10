@@ -12,22 +12,20 @@ require("./database/connection");
 
 // routes import
 const authR = require("./routes/auth");
-
+const userR = require("./routes/userRoutes");
 //  middlewares
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/auth/user", authR);
 
+
+app.use("/api/auth/user", authR);
+app.use("/api/user", userR);
 // for views in node project
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-// homePage for testing google auth
-app.get('/', (req, res) => { 
-  res.send("<button><a href='/auth'>Login With Google</a></button>") 
-});
 
 // server
 

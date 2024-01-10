@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password, phoneNumber } = req.body;
@@ -95,8 +96,9 @@ const loginUser = async (req, res) => {
   }
 };
 
-const googleLoginPage = (req,res)=>{
-  res.render("googlePage")
-}
+const googleLoginPage = (req, res) => {
+  res.render('googlePage');
+};
+
 
 module.exports = { registerUser, loginUser, googleLoginPage };

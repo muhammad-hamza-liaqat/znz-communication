@@ -109,6 +109,10 @@ const userModel = sequelize.define(
         },
       },
     },
+    // googleID:{
+    //   type: DataTypes.STRING,
+    //   allowNull: true
+    // }
   },
   {
     tableName: "users",
