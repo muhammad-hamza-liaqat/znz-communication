@@ -47,11 +47,13 @@ const loginUser = async (req, res) => {
       });
   }
   try {
+    // finding the user exists or not
     const userToFind = await userModel.findOne({
       where: {
         email: email,
       },
     });
+    // if user doesnot exist
     if (!userToFind) {
       return res
         .status(400)
@@ -61,10 +63,12 @@ const loginUser = async (req, res) => {
           error: "invalid email or password",
         });
     }
+    // comparing the hashed password with the user's password in the req.body
     const validatePassword = await bcrypt.compare(
       password,
       userToFind.password
     );
+    // if error in the password
     if (!validatePassword) {
       return res
         .status(400)
@@ -75,6 +79,7 @@ const loginUser = async (req, res) => {
         });
     }
     console.log("user login");
+    // final response
     return res
       .status(201)
       .json({ statusCode: 201, message: "user successfully login" });
