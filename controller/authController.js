@@ -95,4 +95,8 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const googleLoginPage = (req,res)=>{
+  res.render("googlePage")
+}
+
+module.exports = { registerUser, loginUser, googleLoginPage };

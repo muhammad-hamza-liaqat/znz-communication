@@ -20,6 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth/user", authR);
 
+// for views in node project
+app.set("view engine", "ejs");
+app.use(express.static("public"));
 
 // homePage for testing google auth
 app.get('/', (req, res) => { 
