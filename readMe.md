@@ -8,3 +8,5 @@ nodeMailer -> email sending services
 bcrypt -> hasing for the password
 ### end points
 http://localhost:3000/api/auth/user/register-user
+http://localhost:3000/api/auth/user/google/login
+http://localhost:3000/api/auth/user/google/login
