@@ -10,3 +10,4 @@ bcrypt -> hasing for the password
 http://localhost:3000/api/auth/user/register-user
 http://localhost:3000/api/auth/user/login
 http://localhost:3000/api/auth/user/google/login
+http://localhost:3000/api/user/forgot-password

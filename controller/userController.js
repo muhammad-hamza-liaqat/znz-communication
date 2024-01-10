@@ -1,6 +1,8 @@
 const { where } = require("sequelize");
 const userModel = require("../models/userModel");
-const {newEmailQueue} = require("../utils/nodeMailer/mailer")
+const {newEmailQueue} = require("../utils/nodeMailer/mailer");
+const bcrypt = require("bcrypt");
+
 const forgotPassword = async (req, res) => {
   // res.end("hello from user controller")
   const { email } = req.body;
@@ -57,4 +59,34 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-module.exports = { forgotPassword };
+const setPassword = async (req,res)=>{
+  // res.end("hello from setPassword");
+  const {password, confirmPassword} = req.body;
+  const email = req.params.email;
+  const userPassword = await userModel.findOne({where:{email:email}})
+  if (!userPassword){
+    return res.status(400).json({statusCode:400,message:"user not found"})
+  }
+  if (!password){
+    return res.status(400).json({statusCode:400,message:"password is missing"})
+  }
+  if (!confirmPassword){
+    return res.status(400).json({statusCode:400,message:"confirmPassword is missing"})
+  }
+  if (password !== confirmPassword){
+    return res.status(400).json({statusCode:400, message: "password and confirm password doesnot matches"})
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(password,10);
+    await userPassword.update({ password: hashedPassword }, { where: { email: email }});
+    return res.status(201).json({statusCode:201, message: "password changed", user: userPassword})
+
+    
+  } catch (error) {
+    console.log("error",error);
+    return res.status(500).json({statusCode:500,message: "internal server error", error: error})
+  }
+}
+
+
+module.exports = { forgotPassword, setPassword };
