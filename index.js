@@ -24,7 +24,7 @@ app.use("/api/auth/user", authR);
 // homePage for testing google auth
 app.get('/', (req, res) => { 
   res.send("<button><a href='/auth'>Login With Google</a></button>") 
-}); 
+});
 
 // server
 
