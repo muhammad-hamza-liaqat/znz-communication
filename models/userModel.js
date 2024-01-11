@@ -92,23 +92,23 @@ const userModel = sequelize.define(
         },
       },
     },
-    phoneNumber: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        notNull: {
-          msg: "PhoneNumber can not be null",
-        },
-        len: {
-          args: [11, 11],
-          msg: "phoneNumber should be of 11 character of Numbers",
-        },
-        isNumeric: {
-          msg: "phoneNumber should only contains numeric characters",
-        },
-      },
-    },
+    // phoneNumber: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    //   unique: true,
+    //   validate: {
+    //     notNull: {
+    //       msg: "PhoneNumber can not be null",
+    //     },
+    //     len: {
+    //       args: [11, 11],
+    //       msg: "phoneNumber should be of 11 character of Numbers",
+    //     },
+    //     isNumeric: {
+    //       msg: "phoneNumber should only contains numeric characters",
+    //     },
+    //   },
+    // },
     // googleID:{
     //   type: DataTypes.STRING,
     //   allowNull: true

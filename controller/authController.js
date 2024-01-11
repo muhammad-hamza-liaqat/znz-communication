@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, password, phoneNumber } = req.body;
-  if (!firstName || !lastName || !email || !password || !phoneNumber) {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
     return res
       .status(400)
       .json({ statusCode: 400, message: "all fields are required" });
@@ -15,7 +15,7 @@ const registerUser = async (req, res) => {
     // storing the hash password
     const newUser = await userModel.create({
       ...req.body,
-      password: hashedPassword,
+      password: hashedPassword,      
       checked: null
     });
     console.log(newUser);
