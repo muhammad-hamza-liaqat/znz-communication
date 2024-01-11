@@ -1,6 +1,7 @@
 const express = require("express");
 const authRoutes = express.Router();
-const { registerUser, loginUser, googleLoginPage, googleLogin, googleCallback } = require("../controller/authController");
+const { checkJWT} = require("../middleware/authenticationMiddleware");
+const { registerUser, loginUser, googleLoginPage} = require("../controller/authController");
 
 
 authRoutes.route("/register-user").post(registerUser);
