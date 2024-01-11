@@ -16,6 +16,7 @@ const registerUser = async (req, res) => {
     const newUser = await userModel.create({
       ...req.body,
       password: hashedPassword,
+      checked: null
     });
     console.log(newUser);
     return res.status(201).json({
@@ -72,7 +73,7 @@ const loginUser = async (req, res) => {
       });
     }
 
-    console.log("user login");
+
     const jwtToken = jwt.sign(
       {
         userID: userToFind.userID,
@@ -82,6 +83,7 @@ const loginUser = async (req, res) => {
       process.env.Secret_KEY,
       { expiresIn: "1h" }
     );
+    console.log("user login:",jwtToken);
     // final response
     return res
       .status(201)

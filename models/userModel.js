@@ -112,8 +112,14 @@ const userModel = sequelize.define(
     // googleID:{
     //   type: DataTypes.STRING,
     //   allowNull: true
-    // }
+    // },
+    checked:{
+      type: DataTypes.STRING,
+      allowNull: true,
+      default: null
+    },
   },
+
   {
     tableName: "users",
     timestamps: true,
