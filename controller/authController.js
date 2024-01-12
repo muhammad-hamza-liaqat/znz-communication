@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
@@ -101,5 +102,7 @@ const loginUser = async (req, res) => {
 const googleLoginPage = (req, res) => {
   res.render("googlePage");
 };
+
+
 
 module.exports = { registerUser, loginUser, googleLoginPage };

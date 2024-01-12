@@ -87,6 +87,9 @@ const setPassword = async (req,res)=>{
     return res.status(500).json({statusCode:500,message: "internal server error", error: error})
   }
 }
+const userDashboard = (req,res)=>{
+  res.end("hello user dashboard")
+}
 
 
-module.exports = { forgotPassword, setPassword };
+module.exports = { forgotPassword, setPassword, userDashboard };
