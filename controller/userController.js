@@ -1,19 +1,18 @@
 const { where } = require("sequelize");
 const userModel = require("../models/userModel");
-const {newEmailQueue} = require("../utils/nodeMailer/mailer");
+const tokenModel = require("../models/blacklistModel");
+const { newEmailQueue } = require("../utils/nodeMailer/mailer");
 const bcrypt = require("bcrypt");
 
 const forgotPassword = async (req, res) => {
   // res.end("hello from user controller")
   const { email } = req.body;
   if (!email) {
-    return res
-      .status(400)
-      .json({
-        statusCode: 400,
-        message: "email is required",
-        error: "email is missing",
-      });
+    return res.status(400).json({
+      statusCode: 400,
+      message: "email is required",
+      error: "email is missing",
+    });
   }
   try {
     const userToFind = await userModel.findOne({ where: { email: email } });
@@ -22,8 +21,10 @@ const forgotPassword = async (req, res) => {
         .status(400)
         .json({ statusCode: 400, message: "user not found" });
     }
-    if (userToFind.password ===null){
-      return res.status(400).json({statusCode: 400, message: "email sent already. "})
+    if (userToFind.password === null) {
+      return res
+        .status(400)
+        .json({ statusCode: 400, message: "email sent already. " });
     }
     await userToFind.update({ password: null });
     const resetContent = `
@@ -45,12 +46,12 @@ const forgotPassword = async (req, res) => {
       </body>
     </html>
   `;
-  await newEmailQueue.add({
-    to: userToFind.email,
-    subject: "Password Reset Email",
-    text: "Hello znz family, you have generated the request for the reset email password",
-    html: resetContent,
-  });
+    await newEmailQueue.add({
+      to: userToFind.email,
+      subject: "Password Reset Email",
+      text: "Hello znz family, you have generated the request for the reset email password",
+      html: resetContent,
+    });
     return res
       .status(201)
       .json({ statusCode: 201, message: "password reset. check your email" });
@@ -59,37 +60,74 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-const setPassword = async (req,res)=>{
+const setPassword = async (req, res) => {
   // res.end("hello from setPassword");
-  const {password, confirmPassword} = req.body;
+  const { password, confirmPassword } = req.body;
   const email = req.params.email;
-  const userPassword = await userModel.findOne({where:{email:email}})
-  if (!userPassword){
-    return res.status(400).json({statusCode:400,message:"user not found"})
+  const userPassword = await userModel.findOne({ where: { email: email } });
+  if (!userPassword) {
+    return res.status(400).json({ statusCode: 400, message: "user not found" });
   }
-  if (!password){
-    return res.status(400).json({statusCode:400,message:"password is missing"})
+  if (!password) {
+    return res
+      .status(400)
+      .json({ statusCode: 400, message: "password is missing" });
   }
-  if (!confirmPassword){
-    return res.status(400).json({statusCode:400,message:"confirmPassword is missing"})
+  if (!confirmPassword) {
+    return res
+      .status(400)
+      .json({ statusCode: 400, message: "confirmPassword is missing" });
   }
-  if (password !== confirmPassword){
-    return res.status(400).json({statusCode:400, message: "password and confirm password doesnot matches"})
+  if (password !== confirmPassword) {
+    return res
+      .status(400)
+      .json({
+        statusCode: 400,
+        message: "password and confirm password doesnot matches",
+      });
   }
   try {
-    const hashedPassword = await bcrypt.hash(password,10);
-    await userPassword.update({ password: hashedPassword }, { where: { email: email }});
-    return res.status(201).json({statusCode:201, message: "password changed", user: userPassword})
-
-    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await userPassword.update(
+      { password: hashedPassword },
+      { where: { email: email } }
+    );
+    return res
+      .status(201)
+      .json({
+        statusCode: 201,
+        message: "password changed",
+        user: userPassword,
+      });
   } catch (error) {
-    console.log("error",error);
-    return res.status(500).json({statusCode:500,message: "internal server error", error: error})
+    console.log("error", error);
+    return res
+      .status(500)
+      .json({
+        statusCode: 500,
+        message: "internal server error",
+        error: error,
+      });
   }
-}
-const userDashboard = (req,res)=>{
-  res.end("hello user dashboard")
-}
+};
+const userDashboard = (req, res) => {
+  res.end("hello user dashboard");
+};
 
+const logout = async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  try {
+    await tokenModel.create({ token });
+    res
+      .status(200)
+      .json({
+        message: "user logout successfully!",
+        additionalMessage: "this session token destroyed",
+      });
+  } catch (error) {
+    console.error("error=>", error);
+    res.status(500).json({ message: "internal server error", error: error });
+  }
+};
 
-module.exports = { forgotPassword, setPassword, userDashboard };
+module.exports = { forgotPassword, setPassword, userDashboard, logout };
