@@ -2,7 +2,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-
+const googleModel = require("../models/googleModel");
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
@@ -16,8 +16,8 @@ const registerUser = async (req, res) => {
     // storing the hash password
     const newUser = await userModel.create({
       ...req.body,
-      password: hashedPassword,      
-      checked: null
+      password: hashedPassword,
+      checked: null,
     });
     console.log(newUser);
     return res.status(201).json({
@@ -74,7 +74,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-
     const jwtToken = jwt.sign(
       {
         userID: userToFind.userID,
@@ -84,11 +83,15 @@ const loginUser = async (req, res) => {
       process.env.Secret_KEY,
       { expiresIn: "1h" }
     );
-    console.log("user login:",jwtToken);
+    console.log("user login:", jwtToken);
     // final response
     return res
       .status(201)
-      .json({ statusCode: 201, message: "user successfully login", token: jwtToken });
+      .json({
+        statusCode: 201,
+        message: "user successfully login",
+        token: jwtToken,
+      });
   } catch (error) {
     console.log("error:", error);
     return res.status(500).json({
@@ -102,7 +105,5 @@ const loginUser = async (req, res) => {
 const googleLoginPage = (req, res) => {
   res.render("googlePage");
 };
-
-
 
 module.exports = { registerUser, loginUser, googleLoginPage };

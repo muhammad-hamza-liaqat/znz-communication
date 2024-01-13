@@ -45,13 +45,6 @@
         #googleSignInButton:hover {
             background-color: #357ae8;
         }
-
-        /* Add some styling for responsiveness */
-        @media (max-width: 600px) {
-            #contentContainer {
-                flex-direction: column;
-            }
-        }
     </style>
 </head>
 <body>
@@ -59,55 +52,5 @@
     <div id="contentContainer">
         <button id="googleSignInButton">Sign in with Google</button>
     </div>
-
-    <script>
-        // Function to initialize Google Sign-In API
-        function initGoogleSignIn() {
-            gapi.load('auth2', function() {
-                gapi.auth2.init({
-                    client_id: 'YOUR_GOOGLE_CLIENT_ID',
-                });
-            });
-        }
-
-        // Function to handle sign-in
-        function onSignIn(googleUser) {
-            const id_token = googleUser.getAuthResponse().id_token;
-
-            // Send the id_token to your server for verification and user authentication
-            // Example: You can use fetch to send the token to your Node.js server
-            fetch('/auth/google/callback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id_token }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response from the server (e.g., redirect or display a message)
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        // Attach the click event to the Google Sign-In button
-        document.getElementById('googleSignInButton').addEventListener('click', function() {
-            const auth2 = gapi.auth2.getAuthInstance();
-            auth2.signIn().then(onSignIn);
-        });
-
-        // Load the Google Sign-In API
-        window.onload = function() {
-            gapi.load('auth2', function() {
-                gapi.auth2.init({
-                    client_id: 'YOUR_GOOGLE_CLIENT_ID',
-                });
-            });
-        };
-    </script>
-    <script src="https://apis.google.com/js/api:client.js"></script>
 </body>
 </html>
