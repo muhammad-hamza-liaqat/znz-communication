@@ -5,45 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in with Google</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+        /* Your existing styles */
 
-        #imageContainer {
-            flex: 1;
-            background-image: url('/images/login-concept-illustration_114360-739.avif');
-            background-size: cover;
-            background-position: center;
-            height: 100vh; /* Set the height to 100% of the viewport height */
-        }
-
-        #contentContainer {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #googleSignInButton {
-            background-color: #4285F4;
-            color: #ffffff;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: background-color 0.3s ease;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        #googleSignInButton:hover {
-            background-color: #357ae8;
+        /* Add some styling for responsiveness */
+        @media (max-width: 600px) {
+            #contentContainer {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -52,5 +20,55 @@
     <div id="contentContainer">
         <button id="googleSignInButton">Sign in with Google</button>
     </div>
+
+    <script>
+        // Function to initialize Google Sign-In API
+        function initGoogleSignIn() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: 'YOUR_GOOGLE_CLIENT_ID',
+                });
+            });
+        }
+
+        // Function to handle sign-in
+        function onSignIn(googleUser) {
+            const id_token = googleUser.getAuthResponse().id_token;
+
+            // Send the id_token to your server for verification and user authentication
+            // Example: You can use fetch to send the token to your Node.js server
+            fetch('/auth/google/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id_token }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server (e.g., redirect or display a message)
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Attach the click event to the Google Sign-In button
+        document.getElementById('googleSignInButton').addEventListener('click', function() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            auth2.signIn().then(onSignIn);
+        });
+
+        // Load the Google Sign-In API
+        window.onload = function() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: 'YOUR_GOOGLE_CLIENT_ID',
+                });
+            });
+        };
+    </script>
+    <script src="https://apis.google.com/js/api:client.js"></script>
 </body>
 </html>
