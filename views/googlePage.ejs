@@ -5,7 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in with Google</title>
     <style>
-        /* Your existing styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #imageContainer {
+            flex: 1;
+            background-image: url('/images/login-concept-illustration_114360-739.avif');
+            background-size: cover;
+            background-position: center;
+            height: 100vh; /* Set the height to 100% of the viewport height */
+        }
+
+        #contentContainer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #googleSignInButton {
+            background-color: #4285F4;
+            color: #ffffff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #googleSignInButton:hover {
+            background-color: #357ae8;
+        }
 
         /* Add some styling for responsiveness */
         @media (max-width: 600px) {

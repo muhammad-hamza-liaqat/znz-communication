@@ -12,6 +12,7 @@ http://192.168.1.64:3000/api/auth/user/login
 http://192.168.1.64:3000/api/auth/user/google/login
 http://192.168.1.64:3000/api/user/forgot-password
 http://192.168.1.64:3000/api/user/set-password/:email => email to be passed in params
+http://localhost:8080/api/auth/user/google/login => google oauth
 
 
 
