@@ -29,6 +29,7 @@
         }
 
         #googleSignInButton {
+            display: inline-block; /* Set to inline-block to apply width and height */
             background-color: #4285F4;
             color: #ffffff;
             padding: 15px 30px;
@@ -40,6 +41,7 @@
             text-transform: uppercase;
             transition: background-color 0.3s ease;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none; /* Remove default link underline */
         }
 
         #googleSignInButton:hover {
@@ -50,7 +52,7 @@
 <body>
     <div id="imageContainer"></div>
     <div id="contentContainer">
-        <button id="googleSignInButton">Sign in with Google</button>
+        <a href="#" id="googleSignInButton">Sign in with Google</a>
     </div>
 </body>
 </html>
