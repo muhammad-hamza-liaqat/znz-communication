@@ -9,15 +9,19 @@ const PORT = process.env.PORT;
 
 // database connection called here
 require("./database/connection");
+// passport file for google oauth
+require("./utils/passport/passport");
 
 // routes import
 const authR = require("./routes/auth");
 const userR = require("./routes/userRoutes");
 //  middlewares
 app.use(cors());
-app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+
 
 
 app.use("/api/auth/user", authR);

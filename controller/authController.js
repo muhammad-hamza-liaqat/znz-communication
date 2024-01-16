@@ -105,4 +105,24 @@ const googleLoginPage = (req, res) => {
   res.render("googlePage");
 };
 
-module.exports = { registerUser, loginUser, googleLoginPage };
+const authGoogle = passport.authenticate("google", { scope: ["profile", "email"] });
+
+
+const googleCallback = (req, res) => {
+  passport.authenticate('google', (err, user) => {
+    if (err) {
+      return res.status(400).json({message: "Error while login", error: err});
+    }
+
+    if (!user) {
+      // Authentication failed, redirect to the login page or handle accordingly
+      return res.status(400).json({message: "authentication failed"});
+    }
+
+    // Authentication successful, redirect to the profile page or any other route
+    return res.status(201).json({message: "user login successfully!"});
+  })(req, res);
+};
+
+
+module.exports = { registerUser, loginUser, googleLoginPage, authGoogle, googleCallback };
