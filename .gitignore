@@ -1,4 +1,4 @@
 # resctrict the env file, not to upload on the github
 .env
 # restrict the node_module, not to upload on the github
-node_module
+node_module/
