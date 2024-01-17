@@ -3,8 +3,8 @@ const userModel = require("../../models/userModel");
 const tokenModel = require("../../models/blacklistModel");
 const { newEmailQueue } = require("../../utils/nodeMailer/mailer");
 const bcrypt = require("bcrypt");
-const additional = require("../../models/userAdditionalInformation")
-
+const additional = require("../../models/userAdditionalInformation");
+const jwt = require("jsonwebtoken")
 const forgotPassword = async (req, res) => {
   // res.end("hello from user controller")
   const { email } = req.body;
@@ -80,12 +80,10 @@ const setPassword = async (req, res) => {
       .json({ statusCode: 400, message: "confirmPassword is missing" });
   }
   if (password !== confirmPassword) {
-    return res
-      .status(400)
-      .json({
-        statusCode: 400,
-        message: "password and confirm password doesnot matches",
-      });
+    return res.status(400).json({
+      statusCode: 400,
+      message: "password and confirm password doesnot matches",
+    });
   }
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -93,22 +91,18 @@ const setPassword = async (req, res) => {
       { password: hashedPassword },
       { where: { email: email } }
     );
-    return res
-      .status(201)
-      .json({
-        statusCode: 201,
-        message: "password changed",
-        user: userPassword,
-      });
+    return res.status(201).json({
+      statusCode: 201,
+      message: "password changed",
+      user: userPassword,
+    });
   } catch (error) {
     console.log("error", error);
-    return res
-      .status(500)
-      .json({
-        statusCode: 500,
-        message: "internal server error",
-        error: error,
-      });
+    return res.status(500).json({
+      statusCode: 500,
+      message: "internal server error",
+      error: error,
+    });
   }
 };
 const userDashboard = (req, res) => {
@@ -119,31 +113,69 @@ const logout = async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   try {
     await tokenModel.create({ token });
-    res
-      .status(200)
-      .json({
-        message: "user logout successfully!",
-        additionalMessage: "this session token destroyed",
-      });
+    res.status(200).json({
+      message: "user logout successfully!",
+      additionalMessage: "this session token destroyed",
+    });
   } catch (error) {
     console.error("error=>", error);
     res.status(500).json({ message: "internal server error", error: error });
   }
 };
 
-const additionalUserDetails = async(req,res)=>{
-  const { country, state} = req.body;
-  if (!country || !state){
-    return res.status(400).json({ statusCode:400, message: "all fields required", fields:"country,state,interests"})
-  }
-  try {
+const additionalUserDetails = async (req, res) => {
+  const { country, language, gender, interests } = req.body;
 
-    
-  } catch (error) {
-    console.log("error-additionalUserDetailsController",error);
-    return res.status(500).json({statusCode:500, message: "internal server error"})
+  if (!country || !language || !gender || !interests) {
+    return res.status(400).json({
+      statusCode: 400,
+      message: "all fields required",
+      fields: "country, gender, language, interests",
+    });
   }
 
-}
+  const authHeader = req.headers.authorization;
 
-module.exports = { forgotPassword, setPassword, userDashboard, logout, additionalUserDetails };
+  if (!authHeader) {
+    return res.status(401).json({ message: "token missing" });
+  }
+
+  const accessToken = authHeader.split(" ")[1];
+
+  jwt.verify(accessToken, process.env.Secret_KEY, async (err, decoded) => {
+    if (err) {
+      console.error("JWT verification failed:", err.message);
+      return res.status(401).send("Unauthorized: Invalid token");
+    } else {
+      console.log("JWT decoded:", decoded);
+
+      try {
+        // Extract user email from decoded information
+        const userEmail = decoded.email;
+        const additionalDetails = await additional.create({
+          email: userEmail,
+          country: country,
+          gender: gender,
+          language: language,
+          interests: interests,
+        });
+
+        return res.status(200).json({ message: "Additional details added successfully" });
+      } catch (error) {
+        console.log("error-additionalUserDetailsController", error);
+        return res.status(500).json({ statusCode: 500, message: "internal server error" });
+      }
+    }
+  });
+};
+
+
+
+
+module.exports = {
+  forgotPassword,
+  setPassword,
+  userDashboard,
+  logout,
+  additionalUserDetails,
+};
