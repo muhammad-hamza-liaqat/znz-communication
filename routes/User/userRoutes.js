@@ -1,8 +1,8 @@
 const express = require("express");
 const userRoutes = express.Router();
 const { forgotPassword, setPassword, userDashboard, logout } = require("../controller/userController")
-const {checkJWT }= require("../middleware/authenticationMiddleware");
-const checkPreviousToken = require("../middleware/previousToken");
+const {checkJWT }= require("../../middleware/authenticationMiddleware");
+const checkPreviousToken = require("../../middleware/previousToken");
 
 
 

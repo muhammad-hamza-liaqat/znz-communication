@@ -1,6 +1,6 @@
 const express = require("express");
 const authRoutes = express.Router();
-const { checkJWT} = require("../middleware/authenticationMiddleware");
+const { checkJWT} = require("../../middleware/authenticationMiddleware");
 const { registerUser, loginUser, googleLoginPage, authGoogle, googleCallback} = require("../controller/authController");
 
 

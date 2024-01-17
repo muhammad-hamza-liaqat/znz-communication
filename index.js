@@ -13,8 +13,8 @@ require("./database/connection");
 require("./utils/passport/passport");
 
 // routes import
-const authR = require("./routes/auth");
-const userR = require("./routes/userRoutes");
+const authR = require("./routes/Auth/auth");
+const userR = require("./routes/User/userRoutes");
 //  middlewares
 app.use(cors());
 app.use(express.json());
