@@ -9,6 +9,8 @@ const PORT = process.env.PORT;
 
 // database connection called here
 require("./database/connection");
+// associations
+require("./association/association");
 // passport file for google oauth
 require("./utils/passport/passport");
 

@@ -18,10 +18,21 @@ const userDetailsModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    state: {
+    language: {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    interests: {
+        // use JSON type to store an array
+      type: DataTypes.JSON,
+      allowNull: true,
+    //   by default, an empty array
+      defaultValue: [],
+    },
+    gender:{
+        type: DataTypes.STRING,
+        allowNull: false
+    }
   },
   {
     tableName: "userDetails",

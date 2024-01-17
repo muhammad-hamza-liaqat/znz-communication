@@ -3,6 +3,7 @@ const userModel = require("../../models/userModel");
 const tokenModel = require("../../models/blacklistModel");
 const { newEmailQueue } = require("../../utils/nodeMailer/mailer");
 const bcrypt = require("bcrypt");
+const additional = require("../../models/userAdditionalInformation")
 
 const forgotPassword = async (req, res) => {
   // res.end("hello from user controller")
@@ -130,4 +131,19 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { forgotPassword, setPassword, userDashboard, logout };
+const additionalUserDetails = async(req,res)=>{
+  const { country, state} = req.body;
+  if (!country || !state){
+    return res.status(400).json({ statusCode:400, message: "all fields required", fields:"country,state,interests"})
+  }
+  try {
+
+    
+  } catch (error) {
+    console.log("error-additionalUserDetailsController",error);
+    return res.status(500).json({statusCode:500, message: "internal server error"})
+  }
+
+}
+
+module.exports = { forgotPassword, setPassword, userDashboard, logout, additionalUserDetails };
