@@ -1,7 +1,7 @@
 const { where } = require("sequelize");
-const userModel = require("../models/userModel");
-const tokenModel = require("../models/blacklistModel");
-const { newEmailQueue } = require("../utils/nodeMailer/mailer");
+const userModel = require("../../models/userModel");
+const tokenModel = require("../../models/blacklistModel");
+const { newEmailQueue } = require("../../utils/nodeMailer/mailer");
 const bcrypt = require("bcrypt");
 
 const forgotPassword = async (req, res) => {
