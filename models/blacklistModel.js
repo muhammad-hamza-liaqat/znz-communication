@@ -2,6 +2,11 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
 const Token = sequelize.define("tokens", {
+  tokenID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+  },
   token: {
     type: DataTypes.STRING,
     allowNull: false,

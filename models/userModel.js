@@ -4,55 +4,10 @@ const sequelize = require("../database/connection");
 const userModel = sequelize.define(
   "users",
   {
-    userId: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      allowNull: true,
-      autoIncrement: true,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: "First name is required.",
-        },
-        len: {
-          args: [3, 255],
-          msg: "The firstName should be between 3 and 255 characters.",
-        },
-        validationForFirstName: function (value) {
-          if (/[{};"'~!@#$%^&*()_+=123456789/*\-+]/.test(value)) {
-            throw new Error(
-              "special characters or numeric values are not allowed-firstName"
-            );
-          }
-        },
-      },
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: "lastNamea is required.",
-        },
-        len: {
-          args: [3, 255],
-          msg: "The lastName should be between 3 and 255 characters.",
-        },
-        validationForLastName: function (value) {
-          if (/[{};"'~!@#$%^&*()_+=123456789/*\-+]/.test(value)) {
-            throw new Error(
-              "special characters or numeric values are not allowed-lastName"
-            );
-          }
-        },
-      },
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      primaryKey: true,
       unique: true,
       validate: {
         notNull: {
@@ -81,6 +36,46 @@ const userModel = sequelize.define(
         },
       },
     },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "First name is required.",
+        },
+        len: {
+          args: [3, 255],
+          msg: "The firstName should be between 3 and 255 characters.",
+        },
+        validationForFirstName: function (value) {
+          if (/[{};"'~!@#$%^&*()_+=123456789/*\-+]/.test(value)) {
+            throw new Error(
+              "Special characters or numeric values are not allowed in firstName."
+            );
+          }
+        },
+      },
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Last name is required.",
+        },
+        len: {
+          args: [3, 255],
+          msg: "The lastName should be between 3 and 255 characters.",
+        },
+        validationForLastName: function (value) {
+          if (/[{};"'~!@#$%^&*()_+=123456789/*\-+]/.test(value)) {
+            throw new Error(
+              "Special characters or numeric values are not allowed in lastName."
+            );
+          }
+        },
+      },
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -92,34 +87,13 @@ const userModel = sequelize.define(
         },
       },
     },
-    // phoneNumber: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    //   unique: true,
-    //   validate: {
-    //     notNull: {
-    //       msg: "PhoneNumber can not be null",
-    //     },
-    //     len: {
-    //       args: [11, 11],
-    //       msg: "phoneNumber should be of 11 character of Numbers",
-    //     },
-    //     isNumeric: {
-    //       msg: "phoneNumber should only contains numeric characters",
-    //     },
-    //   },
-    // },
-    // googleID:{
-    //   type: DataTypes.STRING,
-    //   allowNull: true
-    // },
-    checked:{
+    googleUser: {
       type: DataTypes.STRING,
       allowNull: true,
-      default: null
+      defaultValue: null,
     },
+    // Add other columns as needed...
   },
-
   {
     tableName: "users",
     timestamps: true,
