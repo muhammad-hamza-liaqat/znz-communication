@@ -7,6 +7,13 @@
 - **jsonwebtoken (jwt)**: for authentication and authorization
 - **nodeMailer**: email sending services
 - **bcrypt**: hashing for the password
+- **passport.js**: for google signin
+- **google oauth20**: strategy used for google oauth
+- **sequelize**: sequelize orm for working with the mysql
+- **ejs**: embedded javascript for frontend
+- **bull**: for queueing the tasks
+- **dotenv**: to store sensitive information
+- **joi**: for validations
 
 ### Endpoints
 - [Register User](http://192.168.1.64:8080/api/auth/user/register-user)
