@@ -4,7 +4,7 @@ const tokenModel = require("../../models/blacklistModel");
 const { newEmailQueue } = require("../../utils/nodeMailer/mailer");
 const bcrypt = require("bcrypt");
 const additional = require("../../models/userAdditionalInformation");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const forgotPassword = async (req, res) => {
   // res.end("hello from user controller")
   const { email } = req.body;
@@ -124,8 +124,9 @@ const logout = async (req, res) => {
 };
 
 const additionalUserDetails = async (req, res) => {
+  // getting details from the user
   const { country, language, gender, interests } = req.body;
-
+  // check
   if (!country || !language || !gender || !interests) {
     return res.status(400).json({
       statusCode: 400,
@@ -133,15 +134,15 @@ const additionalUserDetails = async (req, res) => {
       fields: "country, gender, language, interests",
     });
   }
-
+  // jwt token
   const authHeader = req.headers.authorization;
-
+  // if no token,
   if (!authHeader) {
     return res.status(401).json({ message: "token missing" });
   }
-
+  // split the token on the base of space
   const accessToken = authHeader.split(" ")[1];
-
+  // verify token
   jwt.verify(accessToken, process.env.Secret_KEY, async (err, decoded) => {
     if (err) {
       console.error("JWT verification failed:", err.message);
@@ -152,6 +153,13 @@ const additionalUserDetails = async (req, res) => {
       try {
         // Extract user email from decoded information
         const userEmail = decoded.email;
+        // if information is already added then additional check not to add the information
+        const checkInformation = await additional.findOne({ email: userEmail });
+        if (checkInformation) {
+          return res
+            .status(400)
+            .json({ statusCode: 400, message: "information already added" });
+        }
         const additionalDetails = await additional.create({
           email: userEmail,
           country: country,
@@ -160,17 +168,22 @@ const additionalUserDetails = async (req, res) => {
           interests: interests,
         });
 
-        return res.status(200).json({ message: "Additional details added successfully" });
+        return res
+          .status(201)
+          .json({
+            statusCode: 201,
+            message: "Additional details added successfully",
+            information: additionalDetails,
+          });
       } catch (error) {
         console.log("error-additionalUserDetailsController", error);
-        return res.status(500).json({ statusCode: 500, message: "internal server error" });
+        return res
+          .status(500)
+          .json({ statusCode: 500, message: "internal server error" });
       }
     }
   });
 };
-
-
-
 
 module.exports = {
   forgotPassword,
