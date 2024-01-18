@@ -1,41 +1,35 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
-
-const userDetailsModel = sequelize.define(
-  "userDetails",
+const users = require("./userModel")
+const postModel = sequelize.define(
+  "post",
   {
+    postID: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: "users",
         key: "email",
       },
       onDelete: "CASCADE",
     },
-    country: {
-      type: DataTypes.STRING,
+    post: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-    language: {
-      type: DataTypes.STRING,
+    image: {
+      type: DataTypes.TEXT,
       allowNull: true,
     },
-    interests: {
-        // use JSON type to store an array
-      type: DataTypes.JSON,
-      allowNull: true,
-    //   by default, an empty array
-      defaultValue: [],
-    },
-    gender:{
-        type: DataTypes.STRING,
-        allowNull: false
-    }
   },
   {
-    tableName: "userDetails",
+    tableName: "posts",
     timestamps: true,
   }
 );
@@ -43,10 +37,10 @@ const userDetailsModel = sequelize.define(
 sequelize
   .sync()
   .then(() => {
-    console.log("userDetailsModel synchronized with the database(znz).");
+    console.log("postModel synchronized with the database(znz).");
   })
   .catch((error) => {
-    console.error("Error synchronizing userDetailsModel", error);
+    console.error("Error synchronizing postModel", error);
   });
 
-module.exports = userDetailsModel;
+module.exports = postModel;

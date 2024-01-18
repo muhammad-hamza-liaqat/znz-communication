@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 const userDetailsModel = require("../models/userAdditionalInformation");
-
+const postModel = require("../models/postModel");
 console.log("association called")
 // Define association between users and userDetails
 userDetailsModel.belongsTo(userModel, {
@@ -13,3 +13,10 @@ userModel.hasOne(userDetailsModel, {
   onDelete: "CASCADE",
 });
 
+// association between users and posts
+userModel.hasMany(postModel,{
+  foreignKey: "email"
+});
+postModel.belongsTo(userModel,{
+  foreignKey: "email"
+})
