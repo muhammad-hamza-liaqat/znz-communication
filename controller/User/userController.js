@@ -112,6 +112,7 @@ const userDashboard = (req, res) => {
 const logout = async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   try {
+    // console.log(token)
     await tokenModel.create({ token });
     res.status(200).json({
       message: "user logout successfully!",

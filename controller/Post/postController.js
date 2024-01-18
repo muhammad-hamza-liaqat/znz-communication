@@ -71,8 +71,8 @@ const myPost = async (req, res) => {
 
     if (!data || data.count === 0) {
       return res
-        .status(404)
-        .json({ statusCode: 404, message: "No posts found" });
+        .status(200)
+        .json({ statusCode: 200, message: "No posts found", data: data });
     }
 
     return res

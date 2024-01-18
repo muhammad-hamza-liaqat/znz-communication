@@ -6,6 +6,7 @@ const Token = sequelize.define("tokens", {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+    autoIncrement: true
   },
   token: {
     type: DataTypes.STRING,
