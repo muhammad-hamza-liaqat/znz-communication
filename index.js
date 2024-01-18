@@ -19,10 +19,11 @@ const authR = require("./routes/Auth/auth");
 const userR = require("./routes/User/userRoutes");
 const postR = require("./routes/Post/postRoutes");
 //  middlewares
+app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+
 
 app.use("/api/auth/user", authR);
 app.use("/api/user", userR);
