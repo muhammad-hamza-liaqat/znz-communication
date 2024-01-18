@@ -2,13 +2,15 @@ const multer = require("multer")
 const path=require('path')
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads');
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.fieldname + path.extname(file.originalname));
-    }
-  });
+  destination: (req, file, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (req, file, cb) => {
+    // Conditionally generate filename based on post content
+    const fileName = req.body.post ? Date.now() + '-' + file.fieldname + path.extname(file.originalname) : '';
+    cb(null, fileName);
+  }
+});
   
   const upload = multer({
     storage: storage,

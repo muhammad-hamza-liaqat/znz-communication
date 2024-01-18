@@ -22,13 +22,27 @@ const addingPost = async (req, res) => {
         .status(400)
         .json({ statusCode: 400, message: "Post content is required" });
     }
-    // console.log(req.file);
-    const postAdd = await postModel.create({
-      email: userEmail,
-      post,
-      image: req.file.path,
-    });
-    return res.status(201).json({statusCode:201, message:"post added successfully", postAdd});
+
+    // Check if a file is present in the request
+    if (req.file) {
+      // Save post only if content is present
+      const postAdd = await postModel.create({
+        email: userEmail,
+        post,
+        image: req.file.path,
+      });
+
+      return res.status(201).json({
+        statusCode: 201,
+        message: "Post added successfully",
+        postAdd,
+      });
+    } else {
+      // Handle case where no file is uploaded
+      return res
+        .status(400)
+        .json({ statusCode: 400, message: "Image file is required" });
+    }
   } catch (error) {
     console.error("Error in adding post:", error);
     return res
