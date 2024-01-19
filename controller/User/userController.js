@@ -125,66 +125,59 @@ const logout = async (req, res) => {
 };
 
 const additionalUserDetails = async (req, res) => {
-  // getting details from the user
-  const { country, language, gender, interests } = req.body;
-  // check
-  if (!country || !language || !gender || !interests) {
-    return res.status(400).json({
-      statusCode: 400,
-      message: "all fields required",
-      fields: "country, gender, language, interests",
-    });
-  }
-  // jwt token
-  const authHeader = req.headers.authorization;
-  // if no token,
-  if (!authHeader) {
-    return res.status(401).json({ message: "token missing" });
-  }
-  // split the token on the base of space
-  const accessToken = authHeader.split(" ")[1];
-  // verify token
-  jwt.verify(accessToken, process.env.Secret_KEY, async (err, decoded) => {
-    if (err) {
-      console.error("JWT verification failed:", err.message);
-      return res.status(401).send("Unauthorized: Invalid token");
-    } else {
-      console.log("JWT decoded:", decoded);
+  try {
+    // Getting details from the user
+    const { country, language, gender, interests } = req.body;
 
-      try {
-        // Extract user email from decoded information
-        const userEmail = decoded.email;
-        // if information is already added then additional check not to add the information
-        const checkInformation = await additional.findOne({ email: userEmail });
-        if (checkInformation) {
-          return res
-            .status(400)
-            .json({ statusCode: 400, message: "information already added" });
-        }
-        const additionalDetails = await additional.create({
-          email: userEmail,
-          country: country,
-          gender: gender,
-          language: language,
-          interests: interests,
-        });
-
-        return res
-          .status(201)
-          .json({
-            statusCode: 201,
-            message: "Additional details added successfully",
-            information: additionalDetails,
-          });
-      } catch (error) {
-        console.log("error-additionalUserDetailsController", error);
-        return res
-          .status(500)
-          .json({ statusCode: 500, message: "internal server error" });
-      }
+    // Check if all fields are provided
+    if (!country || !language || !gender || !interests) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "All fields required",
+        fields: "country, gender, language, interests",
+      });
     }
-  });
-};
+
+    // Check for the presence of the JWT token
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ statusCode: 401, message: "Token missing" });
+    }
+
+    // Split the token on the base of space
+    const accessToken = authHeader.split(" ")[1];
+
+    // Verify token
+    const decoded = jwt.verify(accessToken, process.env.Secret_KEY);
+
+    // Extract user email from decoded information
+    const userEmail = decoded.email;
+
+    // Check if information is already added
+    const checkInformation = await additional.findOne({ where: { email: userEmail } });
+    if (checkInformation) {
+      return res.status(400).json({ statusCode: 400, message: "Information already added" });
+    }
+
+    // Add additional details
+    const additionalDetails = await additional.create({
+      email: userEmail,
+      country: country,
+      gender: gender,
+      language: language,
+      interests: interests,
+    });
+
+    return res.status(201).json({
+      statusCode: 201,
+      message: "Additional details added successfully",
+      information: additionalDetails,
+    });
+  } catch (error) {
+    console.error("Error in additionalUserDetailsController", error);
+    return res.status(500).json({ statusCode: 500, message: "Internal server error" });
+  }
+}
 
 module.exports = {
   forgotPassword,
