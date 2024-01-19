@@ -1,6 +1,6 @@
 const postModel = require("../../models/postModel");
 const jwt = require("jsonwebtoken");
-
+const {checkJWT} = require("../../middleware/authenticationMiddleware")
 const addingPost = async (req, res) => {
   try {
     const { post } = req.body;
@@ -52,38 +52,25 @@ const addingPost = async (req, res) => {
 };
 
 const myPost = async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res
-      .status(400)
-      .json({ statusCode: 400, message: "JWT token missing" });
-  }
-
-  const accessToken = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(accessToken, process.env.Secret_KEY);
-    const userEmail = decoded.email;
+    const userEmail = req.userEmail; // Access user email from the request object
 
     const data = await postModel.findAndCountAll({
       where: { email: userEmail },
     });
 
     if (!data || data.count === 0) {
-      return res
-        .status(200)
-        .json({ statusCode: 200, message: "No posts found", data: data });
+      return res.status(404).json({ statusCode: 404, message: "No posts found", data: data });
     }
 
-    return res
-      .status(200)
-      .json({ statusCode: 200, message: "All posts fetched", data: data.rows });
+    return res.status(200).json({ statusCode: 200, message: "All posts fetched", data: data.rows });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ statusCode: 500, message: "Internal Server Error" });
+    return res.status(500).json({ statusCode: 500, message: "Internal Server Error", error: error.message });
   }
 };
+
+
+
 
 module.exports = { addingPost, myPost };
