@@ -76,11 +76,12 @@ const loginUser = async (req, res) => {
     const jwtToken = jwt.sign(
       {
         userID: userToFind.userID,
-        userName: userToFind.firstName,
+        firstName: userToFind.firstName,
+        lastName: userToFind.lastName,
         email: userToFind.email,
       },
       process.env.Secret_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: process.env.expiry_time }
     );
     console.log("user login:", jwtToken);
     // final response
