@@ -179,6 +179,7 @@ const additionalUserDetails = async (req, res) => {
   }
 }
 
+
 module.exports = {
   forgotPassword,
   setPassword,
