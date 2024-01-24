@@ -6,7 +6,7 @@ const checkExistingToken = require("../../middleware/previousToken");
 const { checkJWT } = require("../../middleware/authenticationMiddleware");
 // const checkExistingToken = require("../../middleware/previousToken")
 
-postRouter.route("/add-post").post(checkExistingToken,checkJWT,upload.single("image"), addingPost);
+postRouter.route("/add-post").post(checkExistingToken,checkJWT,upload.array("image", 10), addingPost);
 postRouter.route("/my-post").get(checkExistingToken, checkJWT, myPost);
 
 module.exports = postRouter;

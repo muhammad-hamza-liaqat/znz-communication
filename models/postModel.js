@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
-const users = require("./userModel")
+const users = require("./userModel");
+
 const postModel = sequelize.define(
   "post",
   {
@@ -23,9 +24,16 @@ const postModel = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    image: {
-      type: DataTypes.JSON,
+    images: {
+      type: DataTypes.TEXT, // or DataTypes.JSON, depending on your preference
       allowNull: true,
+      get() {
+        const rawValue = this.getDataValue("images");
+        return rawValue ? JSON.parse(rawValue) : null;
+      },
+      set(value) {
+        this.setDataValue("images", value ? JSON.stringify(value) : null);
+      },
     },
   },
   {

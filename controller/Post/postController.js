@@ -10,15 +10,15 @@ const addingPost = async (req, res) => {
       return res.status(400).json({ statusCode: 400, message: "Post content is required" });
     }
 
-    // Check if a file is present in the request
-    if (req.file) {
+    // Check if files are present in the request
+    if (req.files && req.files.length > 0) {
       const userEmail = req.userEmail; // Access user email from the request object
 
       // Save post only if content is present
       const postAdd = await postModel.create({
         email: userEmail,
         post,
-        image: req.file.path,
+        images: req.files.map(file => file.filename), // Assuming Multer gives filenames
       });
 
       return res.status(201).json({
@@ -28,13 +28,15 @@ const addingPost = async (req, res) => {
       });
     } else {
       // Handle case where no file is uploaded
-      return res.status(400).json({ statusCode: 400, message: "Image file is required" });
+      return res.status(400).json({ statusCode: 400, message: "Image files are required" });
     }
   } catch (error) {
     console.error("Error in adding post:", error);
     return res.status(500).json({ statusCode: 500, message: "Internal server error", error: error.message });
   }
 };
+
+
 
 
 const myPost = async (req, res) => {
