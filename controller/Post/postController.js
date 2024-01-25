@@ -1,5 +1,14 @@
 const postModel = require("../../models/postModel");
 const {checkJWT} = require("../../middleware/authenticationMiddleware")
+const { v2: cloudinary } = require("cloudinary");
+          
+cloudinary.config({ 
+  cloud_name: process.env.cloud_name, 
+  api_key: process.env.cloud_Api_key, 
+  api_secret: process.env.cloud_Api_Secret_key
+});
+
+
 
 
 const addingPost = async (req, res) => {
