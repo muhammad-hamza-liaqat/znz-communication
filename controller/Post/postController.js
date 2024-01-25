@@ -10,8 +10,8 @@ cloudinary.config({
 });
 
 const addingPost = async (req, res) => {
-  console.log("Full request object:", req);
-  console.log("req.body", req.body);
+  // console.log("Full request object:", req);
+  // console.log("req.body", req.body);
 
   try {
     const { post } = req.body;
@@ -27,7 +27,7 @@ const addingPost = async (req, res) => {
 
       const userEmail = req.userEmail;
 
-      // Assuming you have configured cloudinary properly
+      // configured cloudinary 
       const cloudinaryStream = cloudinary.uploader.upload_stream(async (error, result) => {
         if (error) {
           console.error("Error in Cloudinary upload:", error);
