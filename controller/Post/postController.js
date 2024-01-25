@@ -1,52 +1,92 @@
 const postModel = require("../../models/postModel");
-const {checkJWT} = require("../../middleware/authenticationMiddleware")
-const { v2: cloudinary } = require("cloudinary");
-          
-cloudinary.config({ 
-  cloud_name: process.env.cloud_name, 
-  api_key: process.env.cloud_Api_key, 
-  api_secret: process.env.cloud_Api_Secret_key
+const { checkJWT } = require("../../middleware/authenticationMiddleware");
+const cloudinary = require("cloudinary").v2;
+const { Readable } = require('stream');
+
+cloudinary.config({
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.cloud_Api_key,
+  api_secret: process.env.cloud_Api_Secret_key,
 });
 
-
-
-
 const addingPost = async (req, res) => {
+  console.log("Full request object:", req);
+  console.log("req.body", req.body);
+
   try {
     const { post } = req.body;
 
     if (!post) {
-      return res.status(400).json({ statusCode: 400, message: "Post content is required" });
+      return res
+        .status(400)
+        .json({ statusCode: 400, message: "Post content is required" });
     }
 
-    // Check if files are present in the request
-    if (req.files && req.files.length > 0) {
-      const userEmail = req.userEmail; // Access user email from the request object
+    if (req.file) {
+      console.log("Uploaded file:", req.file);
 
-      // Save post only if content is present
-      const postAdd = await postModel.create({
-        email: userEmail,
-        post,
-        images: req.files.map(file => file.filename), // Assuming Multer gives filenames
+      const userEmail = req.userEmail;
+
+      // Assuming you have configured cloudinary properly
+      const cloudinaryStream = cloudinary.uploader.upload_stream(async (error, result) => {
+        if (error) {
+          console.error("Error in Cloudinary upload:", error);
+          return res
+            .status(500)
+            .json({
+              statusCode: 500,
+              message: "Internal server error",
+              error: error.message,
+            });
+        }
+
+        if (!result) {
+          console.error("Cloudinary did not return a result");
+          return res
+            .status(500)
+            .json({
+              statusCode: 500,
+              message: "Internal server error",
+              error: "Cloudinary did not return a result",
+            });
+        }
+
+        console.log("Cloudinary Response:", result);
+
+        const postAdd = await postModel.create({
+          email: userEmail,
+          post,
+          images: [result.secure_url],
+        });
+
+        return res.status(201).json({
+          statusCode: 201,
+          message: "Post added successfully",
+          postAdd,
+        });
       });
 
-      return res.status(201).json({
-        statusCode: 201,
-        message: "Post added successfully",
-        postAdd,
-      });
+      // Pipe the buffer to Cloudinary
+      const bufferStream = new Readable();
+      bufferStream.push(req.file.buffer);
+      bufferStream.push(null);
+      bufferStream.pipe(cloudinaryStream);
     } else {
-      // Handle case where no file is uploaded
-      return res.status(400).json({ statusCode: 400, message: "Image files are required" });
+      return res
+        .status(400)
+        .json({ statusCode: 400, message: "Image file is required" });
     }
   } catch (error) {
     console.error("Error in adding post:", error);
-    return res.status(500).json({ statusCode: 500, message: "Internal server error", error: error.message });
+    return res
+      .status(500)
+      .json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: error.message,
+      });
   }
 };
-
-
-
 
 const myPost = async (req, res) => {
   try {
@@ -57,17 +97,24 @@ const myPost = async (req, res) => {
     });
 
     if (!data || data.count === 0) {
-      return res.status(404).json({ statusCode: 404, message: "No posts found", data: data });
+      return res
+        .status(404)
+        .json({ statusCode: 404, message: "No posts found", data: data });
     }
 
-    return res.status(200).json({ statusCode: 200, message: "All posts fetched", data: data.rows });
+    return res
+      .status(200)
+      .json({ statusCode: 200, message: "All posts fetched", data: data.rows });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ statusCode: 500, message: "Internal Server Error", error: error.message });
+    return res
+      .status(500)
+      .json({
+        statusCode: 500,
+        message: "Internal Server Error",
+        error: error.message,
+      });
   }
 };
-
-
-
 
 module.exports = { addingPost, myPost };

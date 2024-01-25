@@ -1,31 +1,31 @@
 const multer = require("multer")
-const path=require('path')
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single("image");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads');
-  },
-  filename: (req, file, cb) => {
-    // Conditionally generate filename based on post content
-    const fileName = req.body.post ? Date.now() + '-' + file.fieldname + path.extname(file.originalname) : '';
-    cb(null, fileName);
-  }
-});
-  
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    // will accept only png jpeg gif format image
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only JPEG, PNG, and GIF are allowed."));
+// Middleware to handle file upload
+const handleFileUpload = (req, res, next) => {
+  // Multer middleware for handling file upload
+  upload(req, res, (err) => {
+    if (err) {
+      console.error("Multer Error:", err);
+      return res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
-  },
-  // can add upto 10 images at the same time
-  array: 10, 
-});
 
-  module.exports ={ upload }
+    // Check if file is missing in request
+    if (!req.file) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "Missing required parameter - file",
+      });
+    }
+
+    console.log("File Uploaded Successfully!");
+    next();
+  });
+};
+
+module.exports = {handleFileUpload}
