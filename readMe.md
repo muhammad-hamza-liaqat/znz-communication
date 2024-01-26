@@ -14,7 +14,8 @@
 - **bull**: for queueing the tasks
 - **dotenv**: to store sensitive information
 - **joi**: for validations
-- **multer**: for image uploading 
+- **multer**: for image uploading middlware
+- **cloudinary**: for uploading images on cloudinary cloud images
 
 ### Endpoints
 - [Register User](http://192.168.1.64:8080/api/auth/user/register-user)
