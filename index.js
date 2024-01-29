@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth/user", authR);
 app.use("/api/user", userR);
 app.use("/api/user", postR);
-app.use("/api", likeR);
+app.use("/api/post", likeR);
 // for views in node project
 app.set("view engine", "ejs");
 app.use(express.static("public"));
