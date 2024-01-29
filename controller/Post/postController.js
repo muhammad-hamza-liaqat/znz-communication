@@ -1,7 +1,7 @@
 const postModel = require("../../models/postModel");
 const { checkJWT } = require("../../middleware/authenticationMiddleware");
 const cloudinary = require("cloudinary").v2;
-const { Readable } = require('stream');
+const { Readable } = require("stream");
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -9,28 +9,25 @@ cloudinary.config({
   api_secret: process.env.cloud_Api_Secret_key,
 });
 
-
 // Function to upload a file to Cloudinary
 const uploadToCloudinary = (file) => {
   return new Promise((resolve, reject) => {
     // Use the `upload` method from the Cloudinary SDK
-    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (error, result) => {
-      if (error) {
-        console.error("Error in Cloudinary upload:", error);
-        reject({ error });
-      } else {
-        console.log("Cloudinary Response:", result);
-        resolve({ secure_url: result.secure_url });
-      }
-    }).end(file.buffer);
+    cloudinary.uploader
+      .upload_stream({ resource_type: "auto" }, (error, result) => {
+        if (error) {
+          console.error("Error in Cloudinary upload:", error);
+          reject({ error });
+        } else {
+          console.log("Cloudinary Response:", result);
+          resolve({ secure_url: result.secure_url });
+        }
+      })
+      .end(file.buffer);
   });
 };
 
-
-
-
 // const addingPost = async (req, res) => {
-
 
 //   try {
 //     const { post } = req.body;
@@ -46,7 +43,7 @@ const uploadToCloudinary = (file) => {
 
 //       const userEmail = req.userEmail;
 
-//       // configured cloudinary 
+//       // configured cloudinary
 //       const cloudinaryStream = cloudinary.uploader.upload_stream(async (error, result) => {
 //         if (error) {
 //           console.error("Error in Cloudinary upload:", error);
@@ -126,16 +123,13 @@ const myPost = async (req, res) => {
       .json({ statusCode: 200, message: "All posts fetched", data: data.rows });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({
-        statusCode: 500,
-        message: "Internal Server Error",
-        error: error.message,
-      });
+    return res.status(500).json({
+      statusCode: 500,
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
-
 
 const addingPost = async (req, res) => {
   try {
@@ -154,7 +148,7 @@ const addingPost = async (req, res) => {
         message: "Image files are required",
       });
     }
-
+    // decoded the user email from the middleware
     const userEmail = req.userEmail;
 
     // Process each uploaded file
@@ -196,6 +190,3 @@ const addingPost = async (req, res) => {
 
 module.exports = { addingPost, myPost };
 
-
-
-// ["https://res.cloudinary.com/dwiqm2p8i/image/upload/v1706545235/i4nwag4jw1yiv0wnvsri.jpg","https://res.cloudinary.com/dwiqm2p8i/image/upload/v1706545238/lmndcm4mukodahff8dbj.jpg","https://res.cloudinary.com/dwiqm2p8i/image/upload/v1706545241/tqaqodk5evlvdcski0vg.png"]
