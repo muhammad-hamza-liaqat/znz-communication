@@ -5,6 +5,8 @@ const { newEmailQueue } = require("../../utils/nodeMailer/mailer");
 const bcrypt = require("bcrypt");
 const additional = require("../../models/userAdditionalInformation");
 const jwt = require("jsonwebtoken");
+
+
 const forgotPassword = async (req, res) => {
   // res.end("hello from user controller")
   const { email } = req.body;
