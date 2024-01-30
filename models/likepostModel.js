@@ -1,9 +1,10 @@
 const {DataTypes} = require("sequelize");
 const sequelize = require("../database/connection");
+const userModel = require("./userModel");
 
 
 const postLikeModel = sequelize.define("likes",{
-    likeID:{
+    like_ID:{
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
@@ -12,6 +13,10 @@ const postLikeModel = sequelize.define("likes",{
     likeUserID:{
         type: DataTypes.STRING,
         allowNull: false,
+        references:{
+            model: userModel,
+            key: "email"
+        }
     },
     likePostID: {
         type: DataTypes.STRING,

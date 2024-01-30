@@ -1,7 +1,10 @@
 const userModel = require("../models/userModel");
 const userDetailsModel = require("../models/userAdditionalInformation");
 const postModel = require("../models/postModel");
+const likePostModel = require("../models/likepostModel");
+
 console.log("association called")
+
 // Define association between users and userDetails
 userDetailsModel.belongsTo(userModel, {
   foreignKey: "email",
@@ -19,4 +22,13 @@ userModel.hasMany(postModel,{
 });
 postModel.belongsTo(userModel,{
   foreignKey: "email"
-})
+});
+
+
+// associations between users and likePost
+userModel.hasMany(likePostModel,{
+  foreignKey:"email"
+});
+likePostModel.belongsTo(userModel,{
+  foreignKey: "email"
+});
