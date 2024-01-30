@@ -1,3 +1,4 @@
+// likePostController.js
 const userModel = require("../../models/userModel");
 const postModel = require("../../models/postModel");
 const likePostModel = require("../../models/likepostModel");
@@ -41,6 +42,7 @@ const likePost = async (req, res) => {
         liker_email: likeUserEmail,
         PostID: likePostID,
       },
+      attributes: ['id', 'liker_email', 'PostID', 'isLiked', 'createdAt', 'updatedAt'], // Specify the attributes to include
     });
 
     if (existingLike) {
@@ -55,12 +57,21 @@ const likePost = async (req, res) => {
         }
       );
 
+      const updatedLike = await likePostModel.findOne({
+        where: {
+          liker_email: likeUserEmail,
+          PostID: likePostID,
+        },
+        attributes: ['id', 'liker_email', 'PostID', 'isLiked', 'createdAt', 'updatedAt'], // Specify the attributes to include
+      });
+
       const toggleAction = existingLike.isLiked ? "disliked" : "liked";
       return res
         .status(200)
         .json({
           statusCode: 200,
           message: `Successfully ${toggleAction} the post`,
+          data: updatedLike, // Include the updated data in the response
         });
     } else {
       // If the user has not liked the post, like it
@@ -69,6 +80,7 @@ const likePost = async (req, res) => {
         PostID: likePostID,
         isLiked: true,
       });
+
       return res
         .status(200)
         .json({ statusCode: 200, message: "liked the post", data: addLike });
@@ -84,6 +96,5 @@ const likePost = async (req, res) => {
       });
   }
 };
-
 
 module.exports = { likePost };

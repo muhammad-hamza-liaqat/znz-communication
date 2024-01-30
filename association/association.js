@@ -21,14 +21,16 @@ userModel.hasMany(postModel,{
   foreignKey: "email"
 });
 postModel.belongsTo(userModel,{
-  foreignKey: "email"
+  foreignKey: "email",
 });
 
 
 // associations between users and likePost
-userModel.hasMany(likePostModel,{
-  foreignKey:"email"
+userModel.hasMany(likePostModel, {
+  foreignKey: "liker_email",
+  onDelete: "CASCADE",
 });
-likePostModel.belongsTo(userModel,{
-  foreignKey: "email"
+likePostModel.belongsTo(userModel, {
+  foreignKey: "liker_email",
+  onDelete: "CASCADE",
 });

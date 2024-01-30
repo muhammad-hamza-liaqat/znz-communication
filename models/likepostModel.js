@@ -12,10 +12,10 @@ const postLikeModel = sequelize.define("likes", {
   liker_email: {
     type: DataTypes.STRING,
     allowNull: false,
-    references: {
-      model: userModel,
-      key: "email",
-    },
+    // references: {
+    //   model: userModel,
+    //   key: "email",
+    // },
   },
   PostID: {
     type: DataTypes.STRING,
