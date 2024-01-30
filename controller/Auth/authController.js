@@ -2,6 +2,8 @@ const userModel = require("../../models/userModel");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+
+
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
@@ -83,7 +85,8 @@ const loginUser = async (req, res) => {
       process.env.Secret_KEY,
       { expiresIn: process.env.expiry_time }
     );
-    console.log("user login:", jwtToken);
+    // console.log("userData", userToFind);
+    console.log("user JWT:", jwtToken);
     // final response
     return res
       .status(201)
