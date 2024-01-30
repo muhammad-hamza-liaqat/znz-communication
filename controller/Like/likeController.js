@@ -2,17 +2,20 @@ const userModel = require("../../models/userModel");
 const postModel = require("../../models/postModel");
 const likePostModel = require("../../models/likepostModel");
 
-
-
 const likePost = async (req, res) => {
+  // the id of the post which user wants to like
   const { likePostID } = req.body;
-  likeUserEmail = req.userEmail;
+  // userEmail decoded from the jwt token,
+  const likeUserEmail = req.userEmail;
+
+  // checks
   if (!likePostID || !likeUserEmail) {
     return res.status(400).json({
       statusCode: 400,
       message: "likePostID or likeUserEmail is missing",
     });
   }
+
   try {
     const userExist = await userModel.findOne({
       where: { email: likeUserEmail },
@@ -31,24 +34,56 @@ const likePost = async (req, res) => {
         .status(404)
         .json({ statusCode: 404, message: "post not found" });
     }
-    const addLike = await likePostModel.create({
-      likeUserID: likeUserEmail,
-      likePostID: likePostID,
+
+    // Check if the user has already liked the post
+    const existingLike = await likePostModel.findOne({
+      where: {
+        liker_email: likeUserEmail,
+        PostID: likePostID,
+      },
     });
-    console.log(`${likeUserEmail} liked post against ${postExist.postID}`);
-    return res
-      .status(200)
-      .json({ statusCode: 200, message: "liked the post", data: addLike });
+
+    if (existingLike) {
+      // If the user has already liked the post, toggle isLiked
+      await likePostModel.update(
+        { isLiked: !existingLike.isLiked },
+        {
+          where: {
+            liker_email: likeUserEmail,
+            PostID: likePostID,
+          },
+        }
+      );
+
+      const toggleAction = existingLike.isLiked ? "disliked" : "liked";
+      return res
+        .status(200)
+        .json({
+          statusCode: 200,
+          message: `Successfully ${toggleAction} the post`,
+        });
+    } else {
+      // If the user has not liked the post, like it
+      const addLike = await likePostModel.create({
+        liker_email: likeUserEmail,
+        PostID: likePostID,
+        isLiked: true,
+      });
+      return res
+        .status(200)
+        .json({ statusCode: 200, message: "liked the post", data: addLike });
+    }
   } catch (error) {
-    console.log("internal server error-likePost Controller", error);
+    console.error("Internal server error - likePost Controller", error);
     return res
       .status(500)
       .json({
         statusCode: 500,
-        message: "internal server error",
-        error: error,
+        message: "Internal server error",
+        error: error.message,
       });
   }
 };
+
 
 module.exports = { likePost };
