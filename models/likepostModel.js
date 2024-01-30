@@ -21,6 +21,11 @@ const postLikeModel = sequelize.define("likes",{
     likePostID: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    isDeleted:{
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
     }
 
 })
